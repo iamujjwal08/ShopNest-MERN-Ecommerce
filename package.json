@@ -1,0 +1,19 @@
+{
+  "name": "e_commerce_mern",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "install-all": "npm install && cd Backend && npm install && cd ../frontend && npm install",
+    "start": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "npm --prefix Backend run dev",
+    "frontend": "npm --prefix frontend start",
+    "seed": "npm --prefix Backend run seed"
+  },
+  "dependencies": {
+    "concurrently": "^10.0.3"
+  }
+}
