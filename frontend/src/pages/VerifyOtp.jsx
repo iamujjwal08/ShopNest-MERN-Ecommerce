@@ -16,7 +16,7 @@ const VerifyOtp = () => {
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
-  const [otpExpired, setOtpExpired] = useState(false);
+  const [, setOtpExpired] = useState(false);
 
   // If a user lands here directly without completing step 1, send them back
   useEffect(() => {
