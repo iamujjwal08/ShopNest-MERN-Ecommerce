@@ -10,7 +10,7 @@ const {
 } = require("../controller/authController");
 
 const protect = require("../middleware/authMiddleware");
-const admin = require("../middleware/adminMIddleware");
+const admin = require("../middleware/adminMiddleware");
 
 // Public Routes
 router.post("/register", registerUser);
