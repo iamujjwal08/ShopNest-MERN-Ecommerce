@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import "../styles/product.css";
-
+import API_URL from "../config";
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +15,7 @@ const Shop = () => {
 
       try {
         const res = await fetch(
-          `/api/products?search=${encodeURIComponent(
+          `${API_URL}/api/products?search=${encodeURIComponent(
             search
           )}&category=${category}`
         );
