@@ -20,7 +20,7 @@ import AdminProducts from './admin/AdminProducts';
 import EditProduct from './admin/EditProduct';
 import AdminOrders from './admin/AdminOrders';
 import AdminUsers from './admin/AdminUsers';
-
+import VerifyOtp from './pages/VerifyOtp';
 function App() {
   return (
     <Router>
@@ -34,6 +34,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/verify-otp" element={<VerifyOtp />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/ordersuccess" element={<OrderSuccess />} />
           <Route path="/about" element={<About />} />
@@ -45,6 +46,7 @@ function App() {
           <Route path="/admin/edit-product/:id" element={<EditProduct />} />
           <Route path="/admin/orders" element={<AdminOrders />} />
           <Route path="/admin/users" element={<AdminUsers />} />
+          
         </Routes>
       </div>
       <Footer />

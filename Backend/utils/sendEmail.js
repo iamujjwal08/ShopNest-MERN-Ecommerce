@@ -10,16 +10,20 @@ const sendEmail = async (to, subject, text) => {
             },
         });
 
-        const mailOptions = {
+        await transporter.verify();
+        console.log("SMTP Connected");
+
+        const info = await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to,
             subject,
             text,
-        };
+        });
 
-        await transporter.sendMail(mailOptions);
+        console.log("Mail Sent:", info.response);
     } catch (error) {
-        console.log(error.message);
+        console.error("EMAIL ERROR:");
+        console.error(error);
     }
 };
 

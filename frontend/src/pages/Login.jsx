@@ -19,11 +19,14 @@ const Login = () => {
       });
       const data = await res.json();
       if (res.ok) {
-        login(data);
-        navigate('/');
-      } else {
-        alert(data.message);
-      }
+        navigate("/verify-otp", {
+        state: {
+        email: data.email,
+       },
+    });
+  } else {
+  alert(data.message);
+}
     } catch (error) {
       console.error(error);
     }

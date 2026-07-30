@@ -149,7 +149,50 @@
   font-size: 1.1rem;
   margin-bottom: 30px;
 }
+/* ===========================
+   Search & Filters
+=========================== */
 
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.search-bar,
+.category-filter {
+  background: #18181b;
+  color: #fff;
+  border: 1px solid #27272a;
+  border-radius: 8px;
+  padding: 12px 15px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.search-bar {
+  flex: 1;
+  min-width: 300px;
+}
+
+.category-filter {
+  width: 220px;
+  cursor: pointer;
+}
+
+.search-bar:focus,
+.category-filter:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+}
+
+.category-filter option {
+  background: #18181b;
+  color: white;
+}
 @media (max-width: 900px) {
   .product-detail {
     grid-template-columns: 1fr;

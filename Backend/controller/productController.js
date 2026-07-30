@@ -1,16 +1,35 @@
 const Product = require("../model/Product");
 const cloudinary = require("cloudinary").v2;
 const cloudinary_url = cloudinary.url;
-
+const XLSX = require("xlsx");
 // get all products
 const getProducts = async (req, res) => {
-  try {
-    const products = await Product.find({}).select("-__v");
-    res.json(products);
-  } 
-  catch (error) {
-    res.status(500).json({ message: "Server Error" });
-  }
+    try {
+
+        const filter = {};
+
+        // Search
+        if (req.query.search) {
+            filter.name = {
+                $regex: req.query.search,
+                $options: "i"
+            };
+        }
+
+        // Category
+        if (req.query.category && req.query.category !== "All") {
+            filter.category = req.query.category;
+        }
+
+        const products = await Product.find(filter);
+
+        res.json(products);
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
 };
 
 // get product by id
@@ -104,8 +123,69 @@ const deleteProduct = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+// Import products from Excel
+const importProducts = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({
+                message: "Please upload an Excel file"
+            });
+        }
+
+        // Read Excel file
+        const workbook = XLSX.readFile(req.file.path);
+
+        const sheetName = workbook.SheetNames[0];
+
+        const sheet = workbook.Sheets[sheetName];
+
+        const rows = XLSX.utils.sheet_to_json(sheet);
+
+        let imported = 0;
+        let skipped = 0;
+
+        for (const row of rows) {
+
+            // Skip duplicate product names
+            const exists = await Product.findOne({ name: row.name });
+
+            if (exists) {
+                skipped++;
+                continue;
+            }
+
+            await Product.create({
+                name: row.name,
+                description: row.description || "No description",
+                price: Number(row.price),
+                category: row.category,
+                stock: Number(row.stock),
+                imageUrl: row.image || row.imageUrl,
+                ratings: Number(row.rating) || 0,
+                numReviews: 0
+            });
+
+            imported++;
+        }
+
+        res.status(200).json({
+            success: true,
+            imported,
+            skipped,
+            total: rows.length
+        });
+
+    } catch (error) {
+        console.log(error);
+
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
 module.exports = {  getProducts, 
                     getProductById, 
                     createProduct, 
                     updateProduct,
-                    deleteProduct };
+                    deleteProduct,
+                    importProducts};

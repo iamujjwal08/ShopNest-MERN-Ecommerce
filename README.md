@@ -231,13 +231,14 @@ npm start
 
 - Wishlist
 - Product Reviews & Ratings
-- Coupon System
-- Invoice Generation
-- Search & Filter
+- Advanced Filters
+- Price Sorting
 - Pagination
-- Dark Mode
-- OTP Verification
-- Stripe & PayPal Integration
+- Coupons & Discounts
+- Invoice Generation
+- Stripe Integration
+- PayPal Integration
+- PWA Support
 
 ---
 
