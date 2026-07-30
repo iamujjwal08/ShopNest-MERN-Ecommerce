@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-
+import API_URL from "../config";
 const AdminUsers = () => {
   const { user } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
@@ -12,7 +12,7 @@ useEffect(() => {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/auth/users", {
+      const res = await fetch(`${ API_URL}/api/auth/users`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },

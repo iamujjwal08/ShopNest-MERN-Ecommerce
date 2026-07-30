@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { clearCart } from "../redux/cartSlice";
-
+import API_URL from "../config";
 const Checkout = () => {
   const { user } = useContext(AuthContext);
   const cartItems = useSelector((state) => state.cart.cartItems);
@@ -30,7 +30,7 @@ const Checkout = () => {
     try {
       console.log("User:", user);
       console.log("Token:", user?.token);
-      const res = await fetch("http://localhost:5000/api/orders", {
+      const res = await fetch(`${API_URL}/api/orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,7 +69,7 @@ const Checkout = () => {
   const handlePayment = async () => {
     try {
       const orderRes = await fetch(
-        "http://localhost:5000/api/payment/order",
+        `${API_URL}/api/payment/order`,  
         {
           method: "POST",
           headers: {
@@ -90,7 +90,7 @@ const Checkout = () => {
       }
 
       const options = {
-        key: "rzp_test_T9lYTA73Z8fSDf", // Replace with your Razorpay Test Key
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID, // Replace with your Razorpay Test Key
         amount: orderData.amount,
         currency: orderData.currency,
         name: "ShopNest",
@@ -99,7 +99,7 @@ const Checkout = () => {
 
         handler: async function (response) {
           const verifyRes = await fetch(
-            "http://localhost:5000/api/payment/verify",
+            `${API_URL}/api/payment/verify`,
             {
               method: "POST",
               headers: {
@@ -119,7 +119,7 @@ const Checkout = () => {
           }   
 
           const saveOrderRes = await fetch(
-            "http://localhost:5000/api/orders",
+            `${API_URL}/api/orders`,
             {
               method: "POST",
               headers: {
@@ -175,10 +175,11 @@ const Checkout = () => {
       });
 
       razor.open();
-    } catch(error){
-      console.log("Checkout Error");
-      console.log(error);
     } 
+    catch (error) {
+      console.error("Checkout Error:", error);
+      alert("Something went wrong. Please try again.");
+    }
   };
 
   // ---------------- Submit ----------------
