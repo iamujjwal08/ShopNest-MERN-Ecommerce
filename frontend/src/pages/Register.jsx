@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import '../styles/auth.css';
-import  API_URL  from '../config';
-
+// import  API_URL  from '../config';
+const API_URL="https://shopnest-mern-ecommerce.onrender.com";
+console.log("API_URL =", API_URL);
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
