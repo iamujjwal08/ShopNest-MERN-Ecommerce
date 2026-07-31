@@ -10,6 +10,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("API URL:", API_URL);
+  console.log("Login URL:", `${API_URL}/api/auth/login`);
     try {
       const res = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',

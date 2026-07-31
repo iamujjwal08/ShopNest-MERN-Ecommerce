@@ -2,6 +2,7 @@ const Product = require("../model/Product");
 const cloudinary = require("cloudinary").v2;
 const cloudinary_url = cloudinary.url;
 const XLSX = require("xlsx");
+const fs = require("fs");
 // get all products
 const getProducts = async (req, res) => {
     try {
@@ -128,61 +129,85 @@ const importProducts = async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({
-                message: "Please upload an Excel file"
+                success: false,
+                message: "Please upload a JSON file."
             });
         }
 
-        // Read Excel file
-        const workbook = XLSX.readFile(req.file.path);
+        // Read uploaded JSON file
+        const rawData = fs.readFileSync(req.file.path, "utf8");
+        const products = JSON.parse(rawData);
 
-        const sheetName = workbook.SheetNames[0];
-
-        const sheet = workbook.Sheets[sheetName];
-
-        const rows = XLSX.utils.sheet_to_json(sheet);
+        if (!Array.isArray(products)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid JSON format. Expected an array of products."
+            });
+        }
 
         let imported = 0;
         let skipped = 0;
+        const errors = [];
 
-        for (const row of rows) {
+        for (const product of products) {
+            try {
+                // Skip duplicate product names
+                const exists = await Product.findOne({
+                    name: product.name
+                });
 
-            // Skip duplicate product names
-            const exists = await Product.findOne({ name: row.name });
+                if (exists) {
+                    skipped++;
+                    continue;
+                }
 
-            if (exists) {
-                skipped++;
-                continue;
+                await Product.create({
+                    name: product.name,
+                    description: product.description || "No description",
+                    price: Number(product.price),
+                    category: product.category,
+                    stock: Number(product.stock),
+                    imageUrl: product.imageUrl || product.image || "",
+                    ratings: Number(product.ratings || product.rating || 0),
+                    numReviews: Number(product.numReviews || 0)
+                });
+
+                imported++;
+
+            } catch (err) {
+                errors.push({
+                    product: product.name || "Unknown Product",
+                    error: err.message
+                });
             }
-
-            await Product.create({
-                name: row.name,
-                description: row.description || "No description",
-                price: Number(row.price),
-                category: row.category,
-                stock: Number(row.stock),
-                imageUrl: row.image || row.imageUrl,
-                ratings: Number(row.rating) || 0,
-                numReviews: 0
-            });
-
-            imported++;
         }
 
-        res.status(200).json({
+        // Delete uploaded file after import
+        fs.unlinkSync(req.file.path);
+
+        return res.status(200).json({
             success: true,
+            message: "Products imported successfully.",
             imported,
             skipped,
-            total: rows.length
+            failed: errors.length,
+            errors
         });
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
 
-        res.status(500).json({
+        if (req.file && fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+        }
+
+        return res.status(500).json({
+            success: false,
             message: error.message
         });
     }
 };
+
 module.exports = {  getProducts, 
                     getProductById, 
                     createProduct, 

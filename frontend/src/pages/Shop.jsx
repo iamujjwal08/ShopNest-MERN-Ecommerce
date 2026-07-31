@@ -55,13 +55,10 @@ const Shop = () => {
       >
         <option value="All">All Categories</option>
         <option value="Electronics">Electronics</option>
-        <option value="Fashion">Fashion</option>
-        <option value="Mobiles">Mobiles</option>
-        <option value="Home">Home</option>
+        <option value="Smartphones">Smartphones</option>
         <option value="Furniture">Furniture</option>
-        <option value="Books">Books</option>
         <option value="Beauty">Beauty</option>
-        <option value="Sports">Sports</option>
+        <option value="Grocery">Grocery</option>
       </select>
 
       {loading ? (

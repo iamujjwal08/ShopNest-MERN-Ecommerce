@@ -1,7 +1,8 @@
 import axios from "axios";
+import API_URL from "../config";
 
 const API = axios.create({
-    baseURL: "/api/auth",
+    baseURL: `${API_URL}/api/auth`,
 });
 
 export const verifyOtpRequest = (email, otp) =>

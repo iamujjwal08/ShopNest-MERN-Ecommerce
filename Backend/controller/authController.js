@@ -28,7 +28,6 @@ const registerUser = async (req, res) => {
         if(user) {
                     const otp = generateOtp();
                     const hashedOtp = hashOtp(otp);
-
                     user.otp = hashedOtp;
                     user.otpExpire = getOtpExpiry();
                     user.otpPurpose = "register";
@@ -36,8 +35,17 @@ const registerUser = async (req, res) => {
                     user.otpLastSent = new Date();
 
                     await user.save();
-                    const message = `welcome to shopNest, your otp is ${otp}`;
-                    await sendMail(user.email,"Welcome to ShopNest - Verify Your Email", message);
+                    console.log("User saved:", user.email);
+                    const message = `Welcome to ShopNest. Your OTP is ${otp}`;
+                    console.log("Sending OTP to:", user.email);
+                    console.log("OTP:", otp);
+
+                    await sendMail(
+                        user.email,
+                        "Welcome to ShopNest - Verify Your Email",message
+                    );
+
+                console.log("Email sent successfully");
                     return res.status(201).json({
                     success: true,
                     message: "Registration successful. OTP sent to your email.",
